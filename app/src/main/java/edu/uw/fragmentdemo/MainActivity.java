@@ -14,7 +14,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements MoviesFragment.OnMovieSelectedListener {
 
     private static final String TAG = "MainActivity";
 
@@ -38,7 +39,29 @@ public class MainActivity extends AppCompatActivity {
         String searchTerm = text.getText().toString();
 
         MoviesFragment fragment = (MoviesFragment)getSupportFragmentManager().findFragmentByTag("MoviesFragment");
+        if (fragment == null) {
+            fragment = new MoviesFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragment, null)
+                    .commit();
+        }
         fragment.fetchData(searchTerm);
+    }
+
+    @Override
+    public void movieSelected(Movie movie) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString("title", movie.toString());
+        bundle.putString("imdb", movie.imdbId);
+
+        DetailFragment detailFragment = new DetailFragment();
+        detailFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, detailFragment, null)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

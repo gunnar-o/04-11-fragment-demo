@@ -1,6 +1,7 @@
 package edu.uw.fragmentdemo;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,10 +25,30 @@ public class MoviesFragment extends Fragment {
     private static final String TAG = "MoviesFragment";
     private ArrayAdapter<Movie> adapter;
 
+    private OnMovieSelectedListener callback;
+
+    // Interface supported by anyone who can respond to my clicks
+    public interface OnMovieSelectedListener {
+        public void movieSelected(Movie movie);
+    }
+
+
     public MoviesFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Checks to see if the fragment is correctly supported
+        try {
+
+           callback = (OnMovieSelectedListener)context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnMovieSelected");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +69,9 @@ public class MoviesFragment extends Fragment {
                 Movie movie = (Movie) parent.getItemAtPosition(position);
                 Log.v(TAG, "You clicked on: " + movie);
 
+                // Tell activity to do stuff
+                //((OnMovieSelectedListener) getActivity()).movieSelected(movie);
+                callback.movieSelected(movie);
             }
         });
 

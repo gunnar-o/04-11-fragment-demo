@@ -23,7 +23,18 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        Bundle bundle = this.getArguments();
+
+        if (bundle != null) {
+            TextView txtTitle = (TextView) rootView.findViewById(R.id.txtMovieTitle);
+            txtTitle.setText(bundle.getString("title"));
+
+            TextView txtImdb = (TextView) rootView.findViewById(R.id.txtMovieIMDB);
+            txtImdb.setText(bundle.getString("imdb"));
+        }
+
         return rootView;
     }
 
